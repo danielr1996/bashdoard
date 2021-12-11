@@ -1,0 +1,8 @@
+<script>
+    console.log("test")
+    let eventSource = new EventSource("http://localhost:8080/api/dashboardentries");
+    eventSource.addEventListener('add', (evt) => {
+      let parsed = JSON.parse(evt.data)
+      console.log(parsed)
+    });
+</script>
