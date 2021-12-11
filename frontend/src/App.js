@@ -3,34 +3,53 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [entries, setEntries] = useState(new Map());
+  const [config, setConfig] = useState();
+  const [configLoaded, setConfigLoaded] = useState(false)
+  useEffect(() => {
+    document.title = 'Bashdoard';
+  }, []);
 
   useEffect(() => {
-    (async () => {
-      let res = await fetch('http://localhost:8080/api/sync')
-      let entries = await res.json()
-      for (let entry of entries) {
-        setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
+    async function getConfig() {
+      const res = await fetch(`${process.env.PUBLIC_URL}/config.json`)
+      const config = await res.json()
+      setConfig(config)
+      setConfigLoaded(true)
+    }
+    getConfig()
+  }, [])
+
+  useEffect(() => {
+    if (configLoaded) {
+      async function getDashboardEntries() {
+        let res = await fetch(`${config.api}/api/sync`)
+        let entries = await res.json()
+        for (let entry of entries) {
+          setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
+        }
       }
-    })()
-    let eventSource = new EventSource("http://localhost:8080/api/dashboardentries");
-    eventSource.addEventListener('add', (evt) => {
-      let entry = JSON.parse(evt.data)
-      setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
-    });
-    eventSource.addEventListener('update', (evt) => {
-      console.log('update')
-      let entry = JSON.parse(evt.data)
-      setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
-    });
-    eventSource.addEventListener('delete', (evt) => {
-      let entry = JSON.parse(evt.data)
-      setEntries(prev => {
-        const newState = new Map(prev)
-        newState.delete(entry.namespace + '-' + entry.name)
-        return newState
-      })
-    });
-  })
+      getDashboardEntries()
+
+      let eventSource = new EventSource(`${config.api}/api/dashboardentries`);
+      eventSource.addEventListener('add', (evt) => {
+        let entry = JSON.parse(evt.data)
+        setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
+      });
+      eventSource.addEventListener('update', (evt) => {
+        console.log('update')
+        let entry = JSON.parse(evt.data)
+        setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
+      });
+      eventSource.addEventListener('delete', (evt) => {
+        let entry = JSON.parse(evt.data)
+        setEntries(prev => {
+          const newState = new Map(prev)
+          newState.delete(entry.namespace + '-' + entry.name)
+          return newState
+        })
+      });
+    }
+  }, [config, configLoaded])
   return (
     <>
       <div className="container px-4 py-5" id="icon-grid">
