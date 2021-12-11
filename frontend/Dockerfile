@@ -15,3 +15,4 @@ EXPOSE 80
 RUN apk add jq
 COPY --from=build /tmp/build/build /usr/share/nginx/html
 COPY container/99-config-replace.sh /docker-entrypoint.d/99-config-replace.sh
+RUN chmod a+x /docker-entrypoint.d/99-config-replace.sh
