@@ -1,0 +1,21 @@
+name: Publish Helm Chart
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  push_chart:
+    name: Push helm chart to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Push directory to another repository
+        uses: cpina/github-action-push-to-another-repository@v1.3
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          source-directory: helm
+          destination-github-username: ${{ github.repository_owner }}
+          destination-repository-name: k8s-charts
+          user-email: danielrichter@posteo.de
+          target-directory: charts/bashdoard

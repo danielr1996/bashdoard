@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   backend:
-    image: danielr1996/bashdoard-backend
+    image: ghcr.io/danielr1996/bashdoard-backend
     ports:
       - "8080:8080"
     volumes:
@@ -9,7 +9,7 @@ services:
     environment:
       KUBECONFIG: /root/.kube/config
   frontend:
-    image: danielr1996/bashdoard-frontend
+    image: ghcr.io/danielr1996/bashdoard-frontend
     ports:
       - "8081:80"
     environment:
