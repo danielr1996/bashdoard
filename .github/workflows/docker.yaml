@@ -8,33 +8,16 @@ jobs:
     name: Push backend image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to ghcro.io
+        uses: docker/login-action@v1 
         with:
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          repository: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-backend
-          tag_with_ref: true
-          tag_with_sha: true
-          add_git_labels: true
-          path: backend
-          tags: latest
-  push_frontend:
-    name: Push frontend image to GitHub Packages
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
       - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          repository: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-frontend
-          tag_with_ref: true
-          tag_with_sha: true
-          add_git_labels: true
-          path: frontend
-          tags: latest
+          context: backend
+          tags: "{{ github.repository_owner }}/${{ github.event.repository.name }}-frontend:latest"
