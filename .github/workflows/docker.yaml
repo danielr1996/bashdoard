@@ -1,0 +1,40 @@
+name: Publish Docker images
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  push_backend:
+    name: Push backend image to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ github.repository_owner }}/${{ github.event.repository.name }}-backend
+          tag_with_ref: true
+          tag_with_sha: true
+          add_git_labels: true
+          path: backend
+          tags: latest
+  push_frontend:
+    name: Push frontend image to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ github.repository_owner }}/${{ github.event.repository.name }}-frontend
+          tag_with_ref: true
+          tag_with_sha: true
+          add_git_labels: true
+          path: frontend
+          tags: latest
