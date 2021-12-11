@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Push directory to another repository
-        uses: cpina/github-action-push-to-another-repository@v1.3
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+      - name: Chart | Push
+        uses: appany/helm-oci-chart-releaser@v0.3.0
         with:
-          source-directory: helm
-          destination-github-username: ${{ github.repository_owner }}
-          destination-repository-name: k8s-charts
-          user-email: danielrichter@posteo.de
-          target-directory: charts/bashdoard
+          name: bashdoard
+          repository: danielr1996
+          tag: 0.1.0
+          path: helm 
+          registry: ghcr.io
+          registry_username: ${{ github.actor }}
+          registry_password: ${{ secrets.GITHUB_TOKEN }}
