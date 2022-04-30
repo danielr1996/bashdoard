@@ -1,6 +1,5 @@
 import './App.css';
 import {useEffect} from 'react';
-import DashboardEntry from './dashboardentry/DashboardEntry';
 
 function App() {
     const entries = new Map()
