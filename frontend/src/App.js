@@ -1,72 +1,67 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import {useEffect} from 'react';
+import DashboardEntry from './dashboardentry/DashboardEntry';
 
 function App() {
-  const [entries, setEntries] = useState(new Map());
-  const [config, setConfig] = useState();
-  const [configLoaded, setConfigLoaded] = useState(false)
-  useEffect(() => {
-    document.title = 'Bashdoard';
-  }, []);
+    const entries = new Map()
+    entries.set(1, {
+        url: 'http://homeassistant.local:8123',
+        displayname: 'HomeAssistant',
+        faviconLocation: '/static/icons/favicon.ico'
+    })
+    entries.set(2, {
+        url: 'http://10.0.0.1',
+        displayname: 'OpnSense',
+        faviconLocation: '/ui/themes/opnsense/build/images/favicon.png'
+    })
+    entries.set(3, {
+        url: 'http://10.0.0.2',
+        displayname: 'DrayTek',
+        faviconLocation: '/web/assets/img/favicon.png'
+    })
+    entries.set(4, {
+        url: 'http://10.0.0.4',
+        displayname: 'WiFi AP',
+        faviconLocation: '/images/favicon.png'
+    })
+    entries.set(4, {
+        url: 'http://10.0.0.93',
+        displayname: 'Paperless NG',
+        faviconLocation: '/favicon.ico'
+    })
+    entries.set(5, {
+        url: 'http://10.0.0.91:32400/web',
+        displayname: 'Plex',
+        faviconLocation: '/favicon.ico'
+    })
+    entries.set(6, {
+        url: 'https://10.0.0.8:8006',
+        displayname: 'Proxmox',
+        faviconLocation: '/pve2/images/logo-128.png'
+    })
+    entries.set(7, {
+        url: 'http://10.0.0.5',
+        displayname: 'Unraid',
+        faviconLocation: '/webGui/images/green-on.png'
+    })
+    useEffect(() => {
+        document.title = 'Bashdoard';
+    }, []);
 
-  useEffect(() => {
-    async function getConfig() {
-      const res = await fetch(`${process.env.PUBLIC_URL}/config.json`)
-      const config = await res.json()
-      setConfig(config)
-      setConfigLoaded(true)
-    }
-    getConfig()
-  }, [])
-
-  useEffect(() => {
-    if (configLoaded) {
-      async function getDashboardEntries() {
-        let res = await fetch(`${config.api}/api/sync`)
-        let entries = await res.json()
-        for (let entry of entries) {
-          setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
-        }
-      }
-      getDashboardEntries()
-
-      let eventSource = new EventSource(`${config.api}/api/dashboardentries`);
-      eventSource.addEventListener('add', (evt) => {
-        let entry = JSON.parse(evt.data)
-        setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
-      });
-      eventSource.addEventListener('update', (evt) => {
-        console.log('update')
-        let entry = JSON.parse(evt.data)
-        setEntries(prev => new Map(prev).set(entry.namespace + '-' + entry.name, entry))
-      });
-      eventSource.addEventListener('delete', (evt) => {
-        let entry = JSON.parse(evt.data)
-        setEntries(prev => {
-          const newState = new Map(prev)
-          newState.delete(entry.namespace + '-' + entry.name)
-          return newState
-        })
-      });
-    }
-  }, [config, configLoaded])
-  return (
-    <>
-      <div className="container px-4 py-5" id="icon-grid">
-        <h1 className="pb-2 border-bottom">Bashdoard</h1>
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
-          {[...entries.entries()].map(([key, e]) =>
-            <div key={key} className="col d-flex align-items-start">
-              <img className="bi text-muted flex-shrink-0 me-3" alt="" width="28px" height="28px" src={e.url + e.faviconLocation}></img>
-              <div>
-                <h4 className="fw-bold mb-0"><a href={e.url}>{e.displayname}</a></h4>
-              </div>
+    return (
+        <div className="bg-slate-900 h-screen">
+            <div className="container mx-5 mx-auto grid grid-cols-1">
+                {[...entries.entries()].map(([key, {url, faviconLocation, displayname}]) =>
+                    <a key={key} href={url}>
+                        <div className="bg-slate-800">
+                            <img className="rounded-lg border-2" alt="" width="64px" height="64px" src={url + faviconLocation}/>
+                            <h1 className="text-3xl text-white">{displayname}</h1>
+                        </div>
+                    </a>
+                )}
             </div>
-          )}
         </div>
-      </div>
-    </>
-  );
+    );
 }
 
 export default App;
