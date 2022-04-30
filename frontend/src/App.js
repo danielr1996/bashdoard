@@ -49,17 +49,19 @@ function App() {
     }, []);
 
     return (
-        <div className="bg-slate-900 h-screen">
-            <div className="container mx-5 mx-auto grid grid-cols-1">
+        <div className="bg-slate-900">
+        <div className="container mx-auto h-screen">
+            <div className="p-5 grid grid-cols-1 gap-2">
                 {[...entries.entries()].map(([key, {url, faviconLocation, displayname}]) =>
                     <a key={key} href={url}>
-                        <div className="bg-slate-800">
+                        <div className="bg-slate-800 flex items-center p-4">
                             <img className="rounded-lg border-2" alt="" width="64px" height="64px" src={url + faviconLocation}/>
-                            <h1 className="text-3xl text-white">{displayname}</h1>
+                            <h1 className="ml-3 text-3xl text-white">{displayname}</h1>
                         </div>
                     </a>
                 )}
             </div>
+        </div>
         </div>
     );
 }
