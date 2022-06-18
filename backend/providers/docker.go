@@ -38,9 +38,9 @@ func getEntries() map[string]types.DashboardEntry {
 
 	for _, container := range containers {
 		entries[container.Labels[ID_LABEL]] = types.DashboardEntry{
-			Name:     container.Labels[URL_LABEL],
-			Url:      container.Labels[ICON_LABEL],
-			Icon:     container.Labels[NAME_LABEL],
+			Name:     container.Labels[NAME_LABEL],
+			Url:      container.Labels[URL_LABEL],
+			Icon:     container.Labels[ICON_LABEL],
 			Id:       container.Labels[ID_LABEL],
 			Provider: PROVIDER,
 		}
