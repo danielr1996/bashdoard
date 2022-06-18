@@ -1,16 +1,28 @@
 version: "3.9"
 services:
   backend:
-    image: ghcr.io/danielr1996/bashdoard-backend
+    build: ./backend
     ports:
-      - "8080:8080"
+      - "3040:3040"
     volumes:
-      - C:\\Users\\danie\.kube\config:/root/.kube/config
-    environment:
-      KUBECONFIG: /root/.kube/config
+      - /var/run/docker.sock:/var/run/docker.sock
   frontend:
-    image: ghcr.io/danielr1996/bashdoard-frontend
+    build: ./frontend
     ports:
       - "8081:80"
     environment:
-      API_URL: http://localhost:8080
+      API_URL: http://localhost:3040
+  nginx:
+    image: nginx
+    labels:
+      de.danielr1996.bashdoard.name: https://nginx.app.danielr1996.de
+      de.danielr1996.bashdoard.url: nginx
+      de.danielr1996.bashdoard.icon: /favicon.ico
+      de.danielr1996.bashdoard.id: nginx2
+  apache:
+    image: nginx
+    labels:
+      de.danielr1996.bashdoard.name: https://apache.app.danielr1996.de
+      de.danielr1996.bashdoard.url: apache
+      de.danielr1996.bashdoard.icon: /favicon.png
+      de.danielr1996.bashdoard.id: apache2
