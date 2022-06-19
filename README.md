@@ -2,28 +2,50 @@
 
 ![image](https://user-images.githubusercontent.com/6663726/174461547-1721f249-5df3-48d7-bb17-0d69ce21ce7c.png)
 
-
-bashdoard is a kubernetes native dashboard application that provides links to all your self hosted apps in one place. 
+bashdoard is a cloud native dashboard application that provides links to all your self hosted apps in one place. 
 
 ## Usage
-Install with helm
+### Deployment
+Deploy the dashboard app with docker compose
+
 ```
-helm repo add danielr1996 https://danielr1996.github.io/k8s-charts
-helm upgrade --install bashdoard danielr1996/bashdoard
+services:
+  backend:
+    build: ghcr.io/danielr1996/bashdoard-backend:latest
+    ports:
+      - "3040:3040"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  frontend:
+    build: ghcr.io/danielr1996/bashdoard-frontend:latest
+    ports:
+      - "8081:80"
+    environment:
+      API_URL: http://localhost:3040
 ```
 
-Install `DashboardEntry` with kubectl
-``` shell
-cat <<EOF | kubectl apply -f - 
-apiVersion: "bashdoard.danielr1996.de/v1alpha"
-kind: DashboardEntry
-metadata:
-  name: traefik
-spec:
-  name: "Traefik"
-  url: https://traefik.app.local.danielr1996.de
-  faviconLocation: /dashboard/statics/icons/favicon.ico
-EOF
+### Providers
+
+Currently the only supported provider is docker via container labels, but support for more providers like file or kubernetes
+could be easily implemented
+
+#### DockerProvider
+```
+services: 
+  nginx:
+    image: nginx
+    labels:
+      de.danielr1996.bashdoard.name: Nginx
+      de.danielr1996.bashdoard.url: https://nginx.app.danielr1996.de
+      de.danielr1996.bashdoard.icon: /favicon.ico
+      de.danielr1996.bashdoard.id: nginx
+  apache:
+    image: apache
+    labels:
+      de.danielr1996.bashdoard.name: Apache
+      de.danielr1996.bashdoard.url: https://apache.app.danielr1996.de
+      de.danielr1996.bashdoard.icon: /favicon.png
+      de.danielr1996.bashdoard.id: apache
 ```
 
 ## Roadmap
