@@ -57,8 +57,8 @@ function App() {
                 {[...entries.entries()].map(([key, {url, icon, name}]) =>
                     <a key={key} href={url}>
                         <div className="bg-slate-800 flex items-center p-4">
-                            <img className="rounded-lg border-2" alt="" width="64px" height="64px" src={url + icon}/>
-                            <h1 className="ml-3 text-3xl text-white">{name}</h1>
+                            <img className="rounded-lg" alt="" width="32px" height="32px" src={url + icon}/>
+                            <h1 className="ml-3 text-2xl text-white">{name}</h1><br/>
                         </div>
                     </a>
                 )}
