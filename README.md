@@ -1,5 +1,8 @@
 # bashdoard
 
+![image](https://user-images.githubusercontent.com/6663726/174461547-1721f249-5df3-48d7-bb17-0d69ce21ce7c.png)
+
+
 bashdoard is a kubernetes native dashboard application that provides links to all your self hosted apps in one place. 
 
 ## Usage
