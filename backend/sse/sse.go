@@ -57,6 +57,7 @@ func (s *SSE) Delete(id string) {
 func (s *SSE) Update(id string, entry types.DashboardEntry) {
 	old := s.Entries[id]
 	newEntry := entry
+	s.Entries[id] = entry
 	fmt.Print("OLD: ")
 	fmt.Println(old)
 	fmt.Print("NEW: ")
