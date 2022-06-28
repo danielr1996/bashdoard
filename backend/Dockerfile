@@ -10,5 +10,5 @@ RUN go build -o ./out/bashdoard .
 
 FROM alpine:3.9
 COPY --from=build /tmp/build/out/bashdoard /app/bashdoard
-EXPOSE 8080
+EXPOSE 3040
 CMD ["/app/bashdoard"]
